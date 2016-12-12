@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 6.1.0
+  environment:
+    NODE_PATH: "src"
+
+dependencies:
+  pre:
+    - npm set progress=false
+  override:
+    - npm install --no-optional
+
+test:
+  override:
+    - npm run test
