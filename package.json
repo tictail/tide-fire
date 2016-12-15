@@ -1,11 +1,8 @@
 {
-  "name": "tide-dispatch",
-  "description": "A dispatch plugin for tide",
+  "name": "tide-fire",
+  "description": "A plugin for tide that fires action",
   "version": "0.0.0",
   "author": "Tictail",
-  "bugs": {
-    "url": "https://github.com/tictail/tide-dispatch/issues"
-  },
   "main": "lib/index.js",
   "dependencies": {
     "babel-eslint": "^7.0.0",
@@ -38,16 +35,19 @@
     "node": "~6.1.x",
     "npm": "~3.9.x"
   },
-  "homepage": "https://github.com/tictail/tide-dispatch",
+  "homepage": "https://github.com/tictail/tide-fire",
   "keywords": [
     "tide",
-    "dispatch",
+    "fire",
     "javascript"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tictail/tide-dispatch"
+    "url": "https://github.com/tictail/tide-fire"
+  },
+  "bugs": {
+    "url": "https://github.com/tictail/tide-fire/issues"
   },
   "ava": {
     "require": [

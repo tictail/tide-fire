@@ -34,7 +34,7 @@ export function addActions(newActions) {
   actions = {...actions, ...newActions}
 }
 
-export function dispatch(name, data) {
+export function fire(name, data) {
   const objName = name.split('.')[0]
   const funcName = name.split('.')[1]
   if (process.env.NODE_ENV !== 'production' && (!funcName || !objName)) {
@@ -68,7 +68,7 @@ function applyMiddeware(initialFn, name) {
 function getErrorHandler(name) {
   return function handleDispatchError(err) {
     const e = new Error(err)
-    e.message = `Error in dispatch(${name}): ${err.message}`
+    e.message = `Error in fire(${name}): ${err.message}`
     throw e
   }
 }
