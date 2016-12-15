@@ -12,7 +12,7 @@ function curry(fn, ...args) {
 
 function getSet(tide) {
   return curry(function(path, val) {
-    tide.setState(tide.getState().setIn(path, val))
+    tide.mutate(path, val)
   })
 }
 

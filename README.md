@@ -1,7 +1,7 @@
-# Tide Dispatch
+# Tide Fire
 
 ## What?
-A fireer for [tide](https://github.com/tictail/tide). It's a tiny plugin that firees action calls.
+A plugin for [tide](https://github.com/tictail/tide) that fire actions.
 
 ## Why?
 There are a few things that are somewhat problematic with actions in tide.
@@ -18,8 +18,8 @@ Tide-fire aims to solve these problems.
 
 ## How?
 Tide-fire exposes two functions:
-- `init`, has to be called before any actions are fireed. You'd usually call this right after you have created your tide instance.
-- `fire`, the fireer. Used to invoke actions.
+- `init`, has to be called before any actions are fired. You'd usually call this right after you have created your tide instance.
+- `fire`, used to fire actions.
 
 
 ### init
@@ -35,7 +35,7 @@ init(tide, {
   travel: () => import('./travel.js'),
 })
 ```
-Actions are organized into objects. Above, the object `bar` has two action handlers: `getBeer` and `getDrink`. In a lerger application, you'd probably create a file called `bar.js` which exported functions `getBeer` and `getDrink`.
+Actions are organized into objects. Above, the object `bar` has two action handlers: `getBeer` and `getDrink`. In a larger application, you'd probably create a file called `bar.js` which exported functions `getBeer` and `getDrink`.
 
 We can also pass promises or functions that return promises into the init function. This is nice if you want code-split and lazy-load some actions. In the example above, `travel.js` would contain some action handlers that we don't want in our main bundle. They would only be loaded when one of those actions are invoked.
 
