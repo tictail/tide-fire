@@ -44,9 +44,10 @@ export function fire(name, data) {
     throw new Error(`Can\'t find action object ${objName}`)
   }
   const actionsObj = isFunction(actions[objName]) ? actions[objName]() : actions[objName]
+  const fireAction = getFireAction(name, objName, funcName, data)
   const rv = isPromise(actionsObj) ?
-    actionsObj.then(getFireAction(name, objName, funcName, data)) :
-    Promise.resolve(getFireAction(name, objName, funcName, data)(actionsObj))
+    actionsObj.then(fireAction) :
+    Promise.resolve(fireAction(actionsObj))
   return rv.catch(getErrorHandler(name))
 }
 
