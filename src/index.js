@@ -1,6 +1,6 @@
 let tide, actions, get, set, middleware
 
-function curry(fn, ...args) {
+export function curry(fn, ...args) {
   const curryFn = (fnArgs) => {
     if (fnArgs.length >= fn.length) {
       return fn.apply(this, fnArgs)
@@ -56,13 +56,13 @@ function getFireAction(name, objName, funcName, data) {
     if (process.env.NODE_ENV !== 'production' && !obj[funcName]) {
       throw new Error(`Action ${funcName} not found on ${objName}`)
     }
-    return applyMiddeware(obj[funcName], name)(data, get, set, tide)
+    return applyMiddeware(obj[funcName], name, obj)(data, {get, set, tide})
   }
 }
 
-function applyMiddeware(initialFn, name) {
+function applyMiddeware(initialFn, name, obj) {
   return middleware ?
-    middleware.reduce((fn, middle) => middle(fn, name), initialFn) :
+    middleware.reduce((fn, middle) => middle(fn, name, obj), initialFn) :
     initialFn
 }
 

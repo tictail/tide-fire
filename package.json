@@ -60,6 +60,7 @@
   },
   "scripts": {
     "build": "rm -rf lib && mkdir lib && babel src/index.js -o lib/index.js",
+    "preversion": "npm run build",
     "test": "NODE_ENV=test ava",
     "lint": "eslint ./ --max-warnings 0 --ext .jsx,.js",
     "watch": "NODE_ENV=test ava --watch"

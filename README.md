@@ -52,15 +52,16 @@ The first argument is the action name and the second is the data that will be pa
 ### Action handlers
 Tide-fire action handlers are pure functions. They can look something like this:
 ```
-function getBeer(data, get, set) {
+function getBeer(data, {get, set}) {
   return fetch(`/beers/${data.type}`).then((res) => set(['beers', data.type], res.body))
 }
 ```
-Action handlers will be called with four arguments:
-- `data`, which is whatever was sent as second argument in the `fire` call.
-- `get`, gets things off the tide state. (Usage: `get(['beers', 'singha'])`)
-- `set`, sets things on the tide state. (Usage: `set(['beers', 'singha'], {taste: 'bland'})`)
-- `tide`, the tide instance
+Action handlers will be called with two arguments:
+- The first argument is `data` – whatever was sent as second argument in the `fire` call.
+- The second argument is an object with the following contents:
+  - `get`, gets things off the tide state. (Usage: `get(['beers', 'singha'])`)
+  - `set`, sets things on the tide state. (Usage: `set(['beers', 'singha'], {taste: 'bland'})`)
+  - `tide`, the tide instance
 
 *Pro tip:* `set` is curried, so you can do `const setSinghaCount = set(['beers', 'singha', 'count'])` and later on `setSinghaCount(5)`.
 

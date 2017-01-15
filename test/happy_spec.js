@@ -46,7 +46,7 @@ test('should add actions', (t) => {
 
 test('should send data, get and set to action', (t) => {
   t.plan(3)
-  addActions({test: {action: (data, get, set) => {
+  addActions({test: {action: (data, {get, set}) => {
     t.is(typeof data, 'object', 'data should be an object')
     t.is(typeof get, 'function', 'get should be a function')
     t.is(typeof set, 'function', 'set should be a function')
@@ -55,14 +55,14 @@ test('should send data, get and set to action', (t) => {
 })
 
 test('should get data from state', (t) => {
-  addActions({test: {action: (data, get, set) => {
+  addActions({test: {action: (data, {get, set}) => {
     t.is(get(['bar', 'beer']), 'singha')
   }}})
   fire('test.action')
 })
 
 test('should set data on state', (t) => {
-  addActions({test: {action: (data, get, set) => {
+  addActions({test: {action: (data, {get, set}) => {
     set(['bar', 'testBeer'], 'ipa')
   }}})
   fire('test.action')
@@ -71,7 +71,7 @@ test('should set data on state', (t) => {
 
 test('setter should be curried', (t) => {
   t.plan(2)
-  addActions({chicken: {curry: (data, get, set) => {
+  addActions({chicken: {curry: (data, {get, set}) => {
     const path = ['bar', 'food']
     const setFood = set(path)
     setFood('papadam')
@@ -84,7 +84,7 @@ test('setter should be curried', (t) => {
 
 test('should set data on state multiple times', (t) => {
   const path = ['bar', 'testDrink']
-  addActions({test: {action: (data, get, set) => {
+  addActions({test: {action: (data, {get, set}) => {
     set(path, data)
     return new Promise((resolve) => {
       setTimeout(() => { resolve(set(path, 'no more ' + data)) }, 1)
