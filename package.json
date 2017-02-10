@@ -1,7 +1,7 @@
 {
   "name": "tide-fire",
   "description": "A plugin for tide that fires action",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Tictail",
   "main": "lib/index.js",
   "dependencies": {
