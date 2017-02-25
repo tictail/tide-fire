@@ -1,9 +1,9 @@
 import {test} from 'ava'
 import {init, addActions} from '../src'
-import {Base} from 'tide'
+import {Tide} from 'tide'
 import {Record, Map} from 'immutable'
 
-const tide = new Base()
+const tide = new Tide()
 const record = new Record({
   bar: Map({beer: 'singha'}),
 })

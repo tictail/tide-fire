@@ -1,11 +1,11 @@
 import {test} from 'ava'
 import {init, addActions} from '../src'
-import {Base} from 'tide'
+import {Tide} from 'tide'
 import {spy} from 'sinon'
 import {Record, Map} from 'immutable'
 
 const getTide = () => {
-  const tide = new Base()
+  const tide = new Tide()
   tide.setState(record(Map()))
   return tide
 }
@@ -120,7 +120,7 @@ test('should set data on state multiple times', (t) => {
 
 test('should use middleware', (t) => {
   const middleSpy = spy((fn) => fn)
-  const tide = new Base()
+  const tide = new Tide()
   tide.setState(record(Map()))
   init(tide, {bar: {getBeer: () => 'Singha'}}, [middleSpy])
   tide.fire('bar.getBeer')
