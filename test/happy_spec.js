@@ -1,18 +1,26 @@
 import {test} from 'ava'
-import {fire, init, addActions} from '../src'
-import {Base} from 'tide'
+import {init, addActions} from '../src'
+import {Tide} from 'tide'
 import {spy} from 'sinon'
 import {Record, Map} from 'immutable'
 
-const tide = new Base()
+const getTide = () => {
+  const tide = new Tide()
+  tide.setState(record(Map()))
+  return tide
+}
 const record = new Record({
   bar: Map({beer: 'singha'}),
   food: null,
+  weather: null,
 })
 
-tide.setState(record(Map()))
-
-init(tide, {
+const actions = {
+  multi: {
+    setWeather: (data, {set}) => {
+      set(['weather'], data)
+    },
+  },
   foo: () => new Promise((resolve) => resolve({
     bar: () => 'Beer',
   })),
@@ -22,26 +30,40 @@ init(tide, {
       setTimeout(() => { resolve('Margerita') }, 1)
     }),
   },
-})
+}
+
+const tide = getTide()
+init(tide, actions)
 
 test('should fire action and return result', (t) => {
-  return fire('bar.getBeer').then((res) => {
+  return tide.fire('bar.getBeer').then((res) => {
     t.is(res, 'Singha')
   })
 })
 
+test('should handle multiple tide instances', (t) => {
+  const newTide = getTide()
+  init(newTide, actions)
+  t.is(tide.state.get('weather'), null)
+  t.is(newTide.state.get('weather'), null)
+  return newTide.fire('multi.setWeather', 'clear').then((res) => {
+    t.is(tide.state.get('weather'), null)
+    t.is(newTide.state.get('weather'), 'clear')
+  })
+})
+
 test('should fire action that returns promise', (t) =>
-  fire('bar.getDrink').then((res) => t.is(res, 'Margerita'))
+  tide.fire('bar.getDrink').then((res) => t.is(res, 'Margerita'))
 )
 
 test('should fire action on async action object', (t) =>
-  fire('foo.bar').then((res) => t.is(res, 'Beer'))
+  tide.fire('foo.bar').then((res) => t.is(res, 'Beer'))
 )
 
 test('should add actions', (t) => {
   t.plan(1)
   addActions({cool: {action: (data) => t.deepEqual(data, {foo: 'bar'})}})
-  fire('cool.action', {foo: 'bar'})
+  tide.fire('cool.action', {foo: 'bar'})
 })
 
 test('should send data, get and set to action', (t) => {
@@ -51,21 +73,21 @@ test('should send data, get and set to action', (t) => {
     t.is(typeof get, 'function', 'get should be a function')
     t.is(typeof set, 'function', 'set should be a function')
   }}})
-  fire('test.action', {foo: 'bar'})
+  tide.fire('test.action', {foo: 'bar'})
 })
 
 test('should get data from state', (t) => {
   addActions({test: {action: (data, {get, set}) => {
     t.is(get(['bar', 'beer']), 'singha')
   }}})
-  fire('test.action')
+  tide.fire('test.action')
 })
 
 test('should set data on state', (t) => {
   addActions({test: {action: (data, {get, set}) => {
     set(['bar', 'testBeer'], 'ipa')
   }}})
-  fire('test.action')
+  tide.fire('test.action')
   t.is(tide.get(['bar', 'testBeer']), 'ipa')
 })
 
@@ -79,7 +101,7 @@ test('setter should be curried', (t) => {
     setFood('naan')
     t.is('naan', get(path))
   }}})
-  return fire('chicken.curry')
+  return tide.fire('chicken.curry')
 })
 
 test('should set data on state multiple times', (t) => {
@@ -91,16 +113,16 @@ test('should set data on state multiple times', (t) => {
     })
   }}})
   t.is(tide.get(path), undefined, 'is undefined before')
-  const retVal = fire('test.action', 'hotshot')
+  const retVal = tide.fire('test.action', 'hotshot')
   t.is(tide.get(path), 'hotshot', 'is hotshot in the middle')
   return retVal.then(() => t.is(tide.get(path), 'no more hotshot', 'is no more after'))
 })
 
 test('should use middleware', (t) => {
   const middleSpy = spy((fn) => fn)
-  const tide = new Base()
+  const tide = new Tide()
   tide.setState(record(Map()))
   init(tide, {bar: {getBeer: () => 'Singha'}}, [middleSpy])
-  fire('bar.getBeer')
+  tide.fire('bar.getBeer')
   t.true(middleSpy.calledOnce)
 })

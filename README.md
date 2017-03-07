@@ -17,13 +17,12 @@ Second, action classes are not straightforward to test, since they rely heavily 
 Tide-fire aims to solve these problems.
 
 ## How?
-Tide-fire exposes two functions:
+Tide-fire exposes one function:
 - `init`, has to be called before any actions are fired. You'd usually call this right after you have created your tide instance.
-- `fire`, used to fire actions.
 
 
 ### init
-A call to init can look something like this:
+Init sets up tide-fire and bind the fire function to the tide instance. A call to init can look something like this:
 ```
 init(tide, {
   bar: {
@@ -41,10 +40,9 @@ We can also pass promises or functions that return promises into the init functi
 
 
 ### fire
-Invoking an action with tide-fire looks like this:
+After `init` has been called, there will be a `fire` property on the tide instance. Invoking an action with tide-fire looks like this:
 ```
-fire('bar.getBeer', {type: 'Singha'})
-
+tide.fire('bar.getBeer', {type: 'Singha'})
 ```
 The first argument is the action name and the second is the data that will be passed to the action handler. `fire()` returns a promise that resolves to the return value of the action handler.
 
@@ -87,5 +85,4 @@ const timingMiddleware = (fn, name) => (...args) => {
 ```
 
 ## Reporting issues
-
 Issues should be filed [here on github](https://github.com/tictail/tide-fire/issues).

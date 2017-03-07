@@ -1,4 +1,4 @@
-let tide, actions, get, set, middleware
+let actions, middleware
 
 export function curry(fn, ...args) {
   const curryFn = (fnArgs) => {
@@ -16,15 +16,10 @@ function getSet(tide) {
   })
 }
 
-export function init(_tide, _actions = {}, _middleware) {
-  tide = _tide
+export function init(tide, _actions = {}, _middleware) {
+  tide.addProp('fire', fire.bind(tide))
   actions = _actions
   middleware = _middleware
-  if (process.env.NODE_ENV !== 'production' && !(typeof tide === 'object')) {
-    throw new Error('You must provide a tide instance')
-  }
-  get = tide.get.bind(tide)
-  set = getSet(tide).bind(tide)
 }
 
 export function addActions(newActions) {
@@ -34,7 +29,7 @@ export function addActions(newActions) {
   actions = {...actions, ...newActions}
 }
 
-export function fire(name, data) {
+function fire(name, data) {
   const objName = name.split('.')[0]
   const funcName = name.split('.')[1]
   if (process.env.NODE_ENV !== 'production' && (!funcName || !objName)) {
@@ -44,14 +39,16 @@ export function fire(name, data) {
     throw new Error(`Can\'t find action object ${objName}`)
   }
   const actionsObj = isFunction(actions[objName]) ? actions[objName]() : actions[objName]
-  const fireAction = getFireAction(name, objName, funcName, data)
+  const fireAction = getFireAction(name, objName, funcName, data, this)
   const rv = isPromise(actionsObj) ?
     actionsObj.then(fireAction) :
     Promise.resolve(fireAction(actionsObj))
   return rv.catch(getErrorHandler(name))
 }
 
-function getFireAction(name, objName, funcName, data) {
+function getFireAction(name, objName, funcName, data, tide) {
+  const get = tide.get.bind(tide)
+  const set = getSet(tide).bind(tide)
   return function fireAction(obj) {
     if (process.env.NODE_ENV !== 'production' && !obj[funcName]) {
       throw new Error(`Action ${funcName} not found on ${objName}`)
@@ -70,6 +67,7 @@ function getErrorHandler(name) {
   return function handleDispatchError(err) {
     const e = new Error(err)
     e.message = `Error in fire(${name}): ${err.message}`
+    e.stack = err.stack
     throw e
   }
 }
