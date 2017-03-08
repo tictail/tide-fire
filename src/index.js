@@ -17,7 +17,9 @@ function getSet(tide) {
 }
 
 export function init(tide, _actions = {}, _middleware) {
-  tide.addProp('fire', fire.bind(tide))
+  const bound = fire.bind(tide)
+  tide.addProp('fire', bound)
+  tide.addComponentProp('fire', bound)
   actions = _actions
   middleware = _middleware
 }
