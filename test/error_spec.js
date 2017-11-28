@@ -44,13 +44,13 @@ test('should throw when action path is invalid', (t) => {
   t.throws(() => tide.fire('too.many.dots.cant.handle'))
 })
 
-test('should pass on catch errors when action throws in promise', (t) => {
+test('should throw original error when action throws in promise', (t) => {
   t.plan(2)
   addActions({oops: {
     pinky: () => new Promise(() => { throw Error('Doh!') }),
   }})
   return tide.fire('oops.pinky').catch((err) => {
     t.true(err instanceof Error)
-    t.is(err.message, 'Error in fire(oops.pinky): Doh!')
+    t.is(err.message, 'Doh!')
   })
 })

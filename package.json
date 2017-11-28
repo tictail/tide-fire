@@ -1,17 +1,18 @@
 {
   "name": "tide-fire",
   "description": "A plugin for tide that fires action",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0",
   "author": "Tictail",
   "main": "lib/index.js",
   "dependencies": {
     "babel-eslint": "^7.1.1",
     "immutable": "^3.8.1",
     "react": "^15.4.2",
-    "tide": "~2.0.0-alpha.2"
+    "tide": "~2.0.0"
   },
   "devDependencies": {
     "ava": "^0.18.1",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.22.1",
     "babel-loader": "~6.2.10",
     "babel-plugin-syntax-object-rest-spread": "~6.13.0",
@@ -58,7 +59,7 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf lib && mkdir lib && babel src/index.js -o lib/index.js",
+    "build": "rm -rf lib && mkdir lib && ./node_modules/.bin/babel src/index.js -o lib/index.js",
     "preversion": "npm run build",
     "test": "NODE_ENV=test ava",
     "lint": "eslint ./ --max-warnings 0 --ext .jsx,.js",
