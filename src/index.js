@@ -42,10 +42,9 @@ function fire(name, data) {
   }
   const actionsObj = isFunction(actions[objName]) ? actions[objName]() : actions[objName]
   const fireAction = getFireAction(name, objName, funcName, data, this)
-  const rv = isPromise(actionsObj) ?
+  return isPromise(actionsObj) ?
     actionsObj.then(fireAction) :
     Promise.resolve(fireAction(actionsObj))
-  return rv.catch(getErrorHandler(name))
 }
 
 function getFireAction(name, objName, funcName, data, tide) {
@@ -63,15 +62,6 @@ function applyMiddeware(initialFn, name, obj) {
   return middleware ?
     middleware.reduce((fn, middle) => middle(fn, name, obj), initialFn) :
     initialFn
-}
-
-function getErrorHandler(name) {
-  return function handleDispatchError(err) {
-    const e = new Error(err)
-    e.message = `Error in fire(${name}): ${err.message}`
-    e.stack = err.stack
-    throw e
-  }
 }
 
 function isPromise(obj) {

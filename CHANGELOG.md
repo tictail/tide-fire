@@ -1,4 +1,7 @@
 # 2.0.0
+
+
+# 2.0.0
 tide-fire is placed on tide instance. Use `tide.fire()` instead of `fire()` to fire actions.
 
 # 1.0.1
