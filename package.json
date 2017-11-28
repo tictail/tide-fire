@@ -1,14 +1,14 @@
 {
   "name": "tide-fire",
   "description": "A plugin for tide that fires action",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0",
   "author": "Tictail",
   "main": "lib/index.js",
   "dependencies": {
     "babel-eslint": "^7.1.1",
     "immutable": "^3.8.1",
     "react": "^15.4.2",
-    "tide": "~2.0.0-alpha.2"
+    "tide": "~2.0.0"
   },
   "devDependencies": {
     "ava": "^0.18.1",
