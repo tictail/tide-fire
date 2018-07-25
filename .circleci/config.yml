@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  install:
+    working_directory: ~/tide-fire
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+      - run:
+          command: npm install --no-optional
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  test:
+    working_directory: ~/tide-fire
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+      - run:
+          command: npm run test
+workflows:
+  version: 2
+  test:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
